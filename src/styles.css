@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+/* Estilo para la navbar */
+.navbar-content {
+    max-width: 1280px;
+    margin: auto;
+}
+/* Estilo para el contenido*/
+.body-content {
+    max-width: 1280px;
+    margin: auto;
+    padding: 25px;
+}
+/* Estilo para el input search, se usa !important para que no use el color de bootstrap*/
+.custom-search {
+    color: black !important;
+}
+/* Estilos para el placeholder para el input search, por cada tipo de navegador*/
+.custom-search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: gray;
+            opacity: 1; /* Firefox */
+}
+.custom-search:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: gray;
+}
+.custom-search::-ms-input-placeholder { /* Microsoft Edge */
+            color: gray;
+}
