@@ -21,6 +21,9 @@
     margin: auto;
     padding: 25px;
 }
+.body-header-buttons {
+    margin-bottom: 20px;
+}
 /* Estilo para el input search, se usa !important para que no use el color de bootstrap*/
 .custom-search {
     color: black !important;

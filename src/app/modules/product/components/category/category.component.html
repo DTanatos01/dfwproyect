@@ -1,5 +1,11 @@
 <!-- Contenido de la pagina -->
 <div class="body-content">
+    <div class="body-header-buttons">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalCategory">
+            Nueva Categoria
+        </button>
+    </div>
     <!-- Card -->
     <div class="card border-primary mb-3">
         <!-- Titulo de la Card -->
@@ -19,16 +25,9 @@
                 </thead>
                 <!-- Contenido de la tabla -->
                 <tbody>
-                    <!-- Solo usando el nFor -->
-                    <tr class="table-light" *ngFor="let categoria of categories">
-                        <td>{{categoria.category_id}}</td>
-                        <td>{{categoria.code}}</td>
-                        <td>{{categoria.category}}</td>
-                        <td>{{categoria.status}}</td>
-                    </tr>
-                    <!-- Prueba intentado ponerle color -->
+                    <!-- Poniendo colores -->
                     <ng-container *ngFor="let categoria of categories">
-                        <tr class="{{categoria.status == 'Activo' ? 'table-light' : 'table-danger'}}">
+                        <tr class="{{categoria.status == 'Activo' ? 'table-light' : (categoria.status == 'Procesando' ? 'table-warning' : 'table-danger')}}">
                             <td>{{categoria.category_id}}</td>
                             <td>{{categoria.code}}</td>
                             <td>{{categoria.category}}</td>
@@ -37,6 +36,40 @@
                     </ng-container>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCategory" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCategoryTitle">Nueva Categoria</h5>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formularioCategorias" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                      <label class="form-label mt-4" for="category">Category:</label>
+                      <input class="form-control" type="text" id="category" formControlName="category" placeholder="Ingresa el nombre de la categoria" [class.is-invalid]="formularioCategorias.get('category')?.hasError('required')">
+                      <div class="invalid-feedback" *ngIf="formularioCategorias.get('category')?.hasError('required')">
+                        El campo debe contener informacion
+                      </div>
+                    </div>
+                  
+                    <div class="form-group">
+                      <label class="form-label mt-4" for="code">Code:</label>
+                      <input class="form-control" type="text" id="code" formControlName="code" placeholder="Ingresa el codigo de la categoria" [class.is-invalid]="formularioCategorias.get('code')?.hasError('required')">
+                      <div class="invalid-feedback" *ngIf="formularioCategorias.get('code')?.hasError('required')">
+                        El campo debe contener informacion
+                      </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" (click)="onSubmit()">Save changes</button>
+            </div>
         </div>
     </div>
 </div>
