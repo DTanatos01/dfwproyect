@@ -1,0 +1,42 @@
+<!-- Contenido de la pagina -->
+<div class="body-content">
+    <!-- Card -->
+    <div class="card border-primary mb-3">
+        <!-- Titulo de la Card -->
+        <div class="card-header">Listado de Categorías</div>
+        <!-- Contenido de la Card -->
+        <div class="card-body">
+            <!-- Tabla -->
+            <table class="table table-hover">
+                <!-- Cabeza de la tabla -->
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Category_ID</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <!-- Contenido de la tabla -->
+                <tbody>
+                    <!-- Solo usando el nFor -->
+                    <tr class="table-light" *ngFor="let categoria of categories">
+                        <td>{{categoria.category_id}}</td>
+                        <td>{{categoria.code}}</td>
+                        <td>{{categoria.category}}</td>
+                        <td>{{categoria.status}}</td>
+                    </tr>
+                    <!-- Prueba intentado ponerle color -->
+                    <ng-container *ngFor="let categoria of categories">
+                        <tr class="{{categoria.status == 'Activo' ? 'table-light' : 'table-danger'}}">
+                            <td>{{categoria.category_id}}</td>
+                            <td>{{categoria.code}}</td>
+                            <td>{{categoria.category}}</td>
+                        <td>{{categoria.status}}</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
