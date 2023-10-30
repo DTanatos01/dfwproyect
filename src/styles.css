@@ -30,12 +30,39 @@
 }
 /* Estilos para el placeholder para el input search, por cada tipo de navegador*/
 .custom-search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-            color: gray;
-            opacity: 1; /* Firefox */
+    color: gray;
+    opacity: 1; /* Firefox */
 }
 .custom-search:-ms-input-placeholder { /* Internet Explorer 10-11 */
-            color: gray;
+    color: gray;
 }
 .custom-search::-ms-input-placeholder { /* Microsoft Edge */
-            color: gray;
+    color: gray;
+}
+.btn-custom {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px;
+    color: #000;
+}
+.btn-custom i {
+    margin: auto;
+    font-size: 32px;
+}
+.btn-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+.btn-more i {
+    margin: auto;
+    font-size: 20px;
+}
+.custom-collapse {
+    margin-top: 10px;
 }

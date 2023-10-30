@@ -2,8 +2,9 @@
 <div class="body-content">
     <div class="body-header-buttons">
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalCategory">
-            Nueva Categoria
+        <button type="button" class="btn btn-warning btn-custom" data-bs-toggle="modal" data-bs-target="#modalCategory">
+            <i class="ph-duotone ph-plus-circle"></i>
+            <span>Nueva Categoria</span> 
         </button>
     </div>
     <!-- Card -->
@@ -17,21 +18,45 @@
                 <!-- Cabeza de la tabla -->
                 <thead>
                     <tr class="table-primary">
-                        <th scope="col">Category_ID</th>
-                        <th scope="col">Code</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Identificador</th>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Mas</th>
                     </tr>
                 </thead>
                 <!-- Contenido de la tabla -->
                 <tbody>
                     <!-- Poniendo colores -->
-                    <ng-container *ngFor="let categoria of categories">
-                        <tr class="{{categoria.status == 'Activo' ? 'table-light' : (categoria.status == 'Procesando' ? 'table-warning' : 'table-danger')}}">
+                    <ng-container *ngFor="let categoria of categories; let i = index">
+                        <tr class="{{categoria.status == 1 ? 'table-info' : 'table-danger'}}">
                             <td>{{categoria.category_id}}</td>
                             <td>{{categoria.code}}</td>
                             <td>{{categoria.category}}</td>
-                        <td>{{categoria.status}}</td>
+                            <td>{{categoria.status == 1 ? 'Activo' : 'Inactivo'}}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-more btn-sm" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseTableC' + i" aria-expanded="false" [attr.aria-controls]="'collapseTableC' + i">
+                                    <i class="ph-duotone ph-dots-three-outline-vertical"></i>
+                                </button>
+                                <div [attr.id]="'collapseTableC' + i" class="collapse custom-collapse">
+                                    <div class="accordion-body">
+                                        <div class="flex-column justify-content-center">
+                                            <button type="button" (click)="editModal(categoria.category_id, categoria.code, categoria.category)" class="btn btn-warning btn-custom btn-sm mb-1">
+                                                <i class="ph-duotone ph-note-pencil"></i>
+                                                <span>Editar</span> 
+                                            </button>
+                                            <button type="button" (click)="activate(categoria.category_id, 1)" class="btn {{categoria.status == 1 ? 'btn-warning' : 'btn-success'}} btn-custom btn-sm mb-1">
+                                                <i class="ph-duotone ph-check-circle"></i>
+                                                <span>Activar</span> 
+                                            </button>
+                                            <button type="button" (click)="activate(categoria.category_id, 0)" class="btn {{categoria.status == 1 ? 'btn-danger' : 'btn-warning'}} btn-custom btn-sm mb-1">
+                                                <i class="ph-duotone ph-x-circle"></i>
+                                                <span>Desactivar</span> 
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     </ng-container>
                 </tbody>
@@ -40,7 +65,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal para nueva categoria -->
 <div class="modal fade" id="modalCategory" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalCategoryLabel" aria-hidden="true">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -50,7 +75,7 @@
             <div class="modal-body">
                 <form [formGroup]="formularioCategorias" (ngSubmit)="onSubmit()">
                     <div class="form-group">
-                      <label class="form-label mt-4" for="category">Category:</label>
+                      <label class="form-label mt-4" for="category">Categoria:</label>
                       <input class="form-control" type="text" id="category" formControlName="category" placeholder="Ingresa el nombre de la categoria" [class.is-invalid]="formularioCategorias.get('category')?.hasError('required')">
                       <div class="invalid-feedback" *ngIf="formularioCategorias.get('category')?.hasError('required')">
                         El campo debe contener informacion
@@ -58,7 +83,7 @@
                     </div>
                   
                     <div class="form-group">
-                      <label class="form-label mt-4" for="code">Code:</label>
+                      <label class="form-label mt-4" for="code">Codigo:</label>
                       <input class="form-control" type="text" id="code" formControlName="code" placeholder="Ingresa el codigo de la categoria" [class.is-invalid]="formularioCategorias.get('code')?.hasError('required')">
                       <div class="invalid-feedback" *ngIf="formularioCategorias.get('code')?.hasError('required')">
                         El campo debe contener informacion
@@ -67,7 +92,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetModal()">Close</button>
                 <button type="button" class="btn btn-success" (click)="onSubmit()">Save changes</button>
             </div>
         </div>
