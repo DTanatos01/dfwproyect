@@ -1,4 +1,4 @@
-export class category {
+export class Category {
     // Atributos de la clase
     public category_id: number;
     public code: string;
