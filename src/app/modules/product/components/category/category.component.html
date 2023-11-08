@@ -41,15 +41,15 @@
                                 <div [attr.id]="'collapseTableC' + i" class="collapse custom-collapse">
                                     <div class="accordion-body">
                                         <div class="flex-column justify-content-center">
-                                            <button type="button" (click)="editModal(categoria.category_id, categoria.code, categoria.category)" class="btn btn-warning btn-custom btn-sm mb-1">
+                                            <button type="button" (click)="editModal(categoria)" class="btn btn-warning btn-custom btn-sm mb-1">
                                                 <i class="ph-duotone ph-note-pencil"></i>
                                                 <span>Editar</span> 
                                             </button>
-                                            <button type="button" (click)="activate(categoria.category_id, 1)" class="btn {{categoria.status == 1 ? 'btn-warning' : 'btn-success'}} btn-custom btn-sm mb-1">
+                                            <button *ngIf="categoria.status == 0" type="button" (click)="activate(categoria.category_id)" class="btn btn-success btn-custom btn-sm mb-1">
                                                 <i class="ph-duotone ph-check-circle"></i>
                                                 <span>Activar</span> 
                                             </button>
-                                            <button type="button" (click)="activate(categoria.category_id, 0)" class="btn {{categoria.status == 1 ? 'btn-danger' : 'btn-warning'}} btn-custom btn-sm mb-1">
+                                            <button type="button" *ngIf="categoria.status == 1" (click)="desactivate(categoria.category_id)" class="btn btn-danger btn-custom btn-sm mb-1">
                                                 <i class="ph-duotone ph-x-circle"></i>
                                                 <span>Desactivar</span> 
                                             </button>

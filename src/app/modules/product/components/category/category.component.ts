@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { category } from '../../_models/category';
+import { Category } from '../../_models/category';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from "@angular/forms";
 import { Validators } from "@angular/forms";
+import { CategoryService } from '../../_services/category.service';
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2'
+
 
 /**
  * Se declara para el uso de Jquery
@@ -16,15 +20,15 @@ declare var $: any;
 })
 
 export class CategoryComponent implements OnInit {
-  public categories: Array<category> = [];  
-  public lastid = 1;
+  public categories: Array<Category> = [];  
   //Variable para el formulario
   formularioCategorias : FormGroup;
+  private nuevoedita : boolean = false;
+  private idetitado : number = -1;
 
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private categoryService : CategoryService) {
     this.formularioCategorias = this.formBuilder.group({
-      id: [null],
       category: ['', Validators.required],
       code: ['', Validators.required],
     });
@@ -35,39 +39,131 @@ export class CategoryComponent implements OnInit {
   }
 
   getCategories() {
-    this.categories.push(new category(this.lastid++, 'CP', 'Cuidado Personal', 1));
-    this.categories.push(new category(this.lastid++, 'JU', 'Jugueteria', 1));
-    this.categories.push(new category(this.lastid++, 'CJ', 'Centro de Jardineria', 0));
+    const result = this.categoryService.getCategorys();
+    result.subscribe(
+      res => {
+        this.categories = res;
+      },
+      err => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'No se logro obtener la información de las Categorias, favor de comunicarse con un administrador',
+          icon: 'error',
+          confirmButtonText: 'Continuar'
+        })
+        console.log(err.error);
+      }
+    );
   }
 
   onSubmit() {
     if (this.formularioCategorias.valid) {
       const formData = this.formularioCategorias.value;
-      console.log(formData);
-      if (formData.id != null) {
-        const temp = this.categories[formData.id-1];
-        temp.category = formData.category;
-        temp.code = formData.code;
-        this.categories[formData.id-1] = temp;
+      if (this.nuevoedita) {
+        const result = this.categoryService.updateCategory(formData, this.idetitado);
+        result.subscribe(
+          res => {
+            this.getCategories();
+            Swal.fire({
+              title: 'Success!',
+              text: 'Se actualizo la categoria correctamente',
+              icon: 'success',
+              confirmButtonText: 'Continuar'
+            })
+          },
+          err => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'No se logro actualizar la categoria, favor de comunicarse con en administrador',
+              icon: 'error',
+              confirmButtonText: 'Continuar'
+            })
+            console.log(err.error);
+          }
+        );
+        this.nuevoedita = false;
+        this.idetitado = -1;
       } else {
-        const nuevaCategoria = new category(this.lastid++, formData.code, formData.category, 0);  
-        this.categories.push(nuevaCategoria);
+        const result = this.categoryService.createCategory(formData);
+        result.subscribe(
+          res => {
+            this.getCategories();
+            Swal.fire({
+              title: 'Success!',
+              text: 'Se creo la categoria sin problemas',
+              icon: 'success',
+              confirmButtonText: 'Continuar'
+            })
+          },
+          err => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'No se logro crear la categoria, favor de comunicarse con un administrador',
+              icon: 'error',
+              confirmButtonText: 'Continuar'
+            })
+            console.log(err.error);
+          }
+        );
       }
-
       $('#modalCategory').modal('hide');
       this.resetModal();
     } else {
     }
   }
   
-  activate(id:number, status:number) {
-    const temp = this.categories[id-1];
-    temp.status = status;
-    this.categories[id-1] = temp;
+  activate(id: number) {
+    const result = this.categoryService.enableCategory(id);
+    result.subscribe(
+      res => {
+        this.getCategories();
+        Swal.fire({
+          title: 'Success!',
+          text: 'Se activo la categoria sin problemas',
+          icon: 'success',
+          confirmButtonText: 'Continuar'
+        })
+      },
+      err => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'No se logro activar la categoria, favor de comunicarse con un administrador',
+          icon: 'error',
+          confirmButtonText: 'Continuar'
+        })
+        console.log(err.error);
+      }
+    );
   }
 
-  editModal(editid:number, editcode:string, editcategory:string) {
-    this.formularioCategorias.setValue({id: editid, category: editcategory, code:editcode});
+  desactivate(id: number) {
+    const result = this.categoryService.disableCategory(id);
+    result.subscribe(
+      res => {
+        this.getCategories();
+        Swal.fire({
+          title: 'Success!',
+          text: 'Se desactivo la categoria sin problemas',
+          icon: 'success',
+          confirmButtonText: 'Continuar'
+        })
+      },
+      err => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'No se logro desactivar la categoria, favor de comunicarse con un administrador',
+          icon: 'error',
+          confirmButtonText: 'Continuar'
+        })
+        console.log(err.error);
+      }
+    );
+  }
+
+  editModal(categoria: Category) {
+    this.nuevoedita = true;
+    this.idetitado = categoria.category_id;
+    this.formularioCategorias.setValue({category: categoria.category, code: categoria.code});
     $('#modalCategory .modal-title').text("Editar Categoria");
     $('#modalCategory').modal('show');
   }
